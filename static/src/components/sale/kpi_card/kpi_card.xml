@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template>
+    <t t-name="owl_dashboard.KpiCardTemplate" owl="1">
+        <div class="col-lg-3 m-0 p-0">
+            <div class="shadow-sm border m-2 p-4 bg-white rounded text-center">
+                <div class="h1 display-5 fw-bold text-dark"><span t-esc="props.value"/> </div>
+                <div class="h3 text-muted"><span t-esc="props.name"/></div>
+                <div class="h3 mt-5">
+                    <span t-attf-class="mb-0 text-#{ props.percentage > 0 ? 'success':'danger' }">
+                        <span t-attf-class="me-1 fa fa-arrow-#{props.percentage > 0 ? 'up':'down'}"/>
+                        <span t-esc="props.percentage"/> %
+                        <span> since last period</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

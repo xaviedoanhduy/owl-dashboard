@@ -1,0 +1,7 @@
+*.pyc
+.DS_Store
+*.conf
+.vscode
+.idea
+__pycache__
+get-pip.py

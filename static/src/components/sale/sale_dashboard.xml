@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="owl_dashboard.OwlSaleDashboardTemplate" owl="1">
+        <div class="vh-100 overflow-auto bg-muted">
+            <div class="row m-3">
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h1 class="text-primary fw-bold">
+                                        Sale Dashboard
+                                    </h1>
+                                    <div>
+                                        <select name="" id="" class="form-select">
+                                            <option value="0">Select period</option>
+                                            <option value="1">Last 7 days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <KpiCard name="'Quotations'" value="10" percentage="6"/>
+                        <KpiCard name="'Orders'" value="20" percentage="11"/>
+                        <KpiCard name="'Revenues'" value="-3" percentage="-3"/>
+                        <KpiCard name="'Average Order'" value="10" percentage="6"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="text-primary fw-bold">
+                                        Top Products
+                                    </h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-right"/>
+                                    </div>
+                                </div>
+                                <ChartRenderer/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="text-primary fw-bold">
+                                        Top Customers
+                                    </h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="row">
+                        <div class="col m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="text-primary fw-bold">
+                                        Monthly Sales
+                                    </h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="text-primary fw-bold">
+                                        Partner Orders
+                                    </h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
