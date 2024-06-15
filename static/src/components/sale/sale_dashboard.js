@@ -1,69 +1,90 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { loadJS } from "@web/core/assets";
-
 import { KpiCard } from "./kpi_card/kpi_card";
 import { ChartRenderer } from "./chart_renderer/chart_renderer";
+import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useRef, onMounted } = owl;
+const { Component, onWillStart, useRef, onMounted, useState } = owl;
+const { DateTime } = luxon;
 
 export class OwlSaleDashboard extends Component {
     setup() {
-        this.chartRef = useRef("chart");
+        this.state = useState({
+            quotations: {
+                value: 10,
+                percentage: 30,
+            },
+            period: "all",
+            currentDate: DateTime.now(),
+            prevDate: null
+        });
+
+        this.orm = useService("orm");
 
         onWillStart(async () => {
-            await loadJS(
-                "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
-            );
+            await this.onchagePeriod();
         });
+    }
 
-        onMounted(() => {
-            const data = [
-                { year: 2010, count: 10 },
-                { year: 2011, count: 20 },
-                { year: 2012, count: 15 },
-                { year: 2013, count: 25 },
-                { year: 2014, count: 22 },
-                { year: 2015, count: 30 },
-                { year: 2016, count: 28 },
+    async onchagePeriod() {
+        this.getDate();
+        await this.getQuotationsCount();
+    }
+
+    getDate() {
+        switch (this.state.period) {
+            case "today":
+                this.state.prevDate = this.state.currentDate.startOf("day");
+                break;
+            case "sevenDays":
+                this.state.prevDate = this.state.currentDate.minus({ days: 7 });
+                break;
+            case "thisMonth":
+                this.state.prevDate = this.state.currentDate.startOf("month");
+                break;
+            case "thisYear":
+                this.state.prevDate = this.state.currentDate.startOf("year");
+                break;
+            case "threeMonth":
+                this.state.prevDate = this.state.currentDate.minus({ months: 3 });
+                break;
+            default:
+                this.state.prevDate = null;
+                return;
+        }
+    }
+
+    async getQuotationsCount() {
+        const currentDomain = [["state", "in", ["draft", "sent"]]];
+        if (this.state.period !== "all" && this.state.prevDate) {
+            currentDomain.push(
+                ["date_order", ">=", this.state.prevDate.toISODate()],
+                ["date_order", "<", this.state.currentDate.toISODate()]
+            );
+        }
+        const saleOrderCurrentCount = await this.orm.searchCount("sale.order", currentDomain);
+        this.state.quotations.value = saleOrderCurrentCount;
+        
+        let saleOrderPrevCount = 0;
+        if (this.state.period !== "all" && this.state.prevDate) {
+            const prevDomain = [
+                ["state", "in", ["draft", "sent"]],
+                ["date_order", "<", this.state.prevDate.toISODate()]
             ];
-            new Chart(this.chartRef.el, {
-                type: "doughnut",
-                data: {
-                    labels: ["Red", "Blue", "Yellow"],
-                    datasets: [
-                        {
-                            label: "My First Dataset",
-                            data: [300, 50, 100],
-                            backgroundColor: [
-                                "rgb(255, 99, 132)",
-                                "rgb(54, 162, 235)",
-                                "rgb(255, 205, 86)",
-                            ],
-                            hoverOffset: 4,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: "top",
-                        },
-                        title: {
-                            display: true,
-                            text: "Chart.js Doughnut Chart",
-                        },
-                    },
-                },
-            });
-        });
+            saleOrderPrevCount = await this.orm.searchCount("sale.order", prevDomain);
+        }
+
+        if (saleOrderPrevCount > 0) {
+            const percentage = ((saleOrderCurrentCount - saleOrderPrevCount) / saleOrderPrevCount) * 100;
+            this.state.quotations.percentage = percentage;
+        } else {
+            this.state.quotations.percentage = 0;
+        }
     }
 }
 
 OwlSaleDashboard.template = "owl_dashboard.OwlSaleDashboardTemplate";
-
 OwlSaleDashboard.components = { KpiCard, ChartRenderer };
 
 registry

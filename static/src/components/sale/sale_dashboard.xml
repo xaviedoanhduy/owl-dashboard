@@ -12,9 +12,23 @@
                                         Sale Dashboard
                                     </h1>
                                     <div>
-                                        <select name="" id="" class="form-select">
-                                            <option value="0">Select period</option>
-                                            <option value="1">Last 7 days</option>
+                                        <select 
+                                            class="form-select" 
+                                            t-model="state.period"
+                                            t-on-change="onchagePeriod"
+                                        >   
+                                            <option value="all">All Quotations</option>
+                                            <optgroup label="Per days">
+                                                <option value="today">Today</option>
+                                                <option value="sevenDays">Last 7 days</option>
+                                            </optgroup>
+                                            <optgroup label="Per months">
+                                                <option value="thisMonth">This month</option>
+                                                <option value="threeMonth">3 months (last 90 days)</option>
+                                            </optgroup>
+                                            <optgroup label="Per year">
+                                                <option value="thisYear">This year</option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
@@ -22,10 +36,26 @@
                         </div>
                     </div>
                     <div class="row">
-                        <KpiCard name="'Quotations'" value="10" percentage="6"/>
-                        <KpiCard name="'Orders'" value="20" percentage="11"/>
-                        <KpiCard name="'Revenues'" value="-3" percentage="-3"/>
-                        <KpiCard name="'Average Order'" value="10" percentage="6"/>
+                        <KpiCard 
+                            name="'Quotations'" 
+                            value="state.quotations.value" 
+                            percentage="state.quotations.percentage"
+                        />
+                        <KpiCard 
+                            name="'Orders'" 
+                            value="20" 
+                            percentage="11"
+                        />
+                        <KpiCard 
+                            name="'Revenues'" 
+                            value="-3" 
+                            percentage="-3"
+                        />
+                        <KpiCard 
+                            name="'Average Order'" 
+                            value="10"
+                            percentage="6"
+                        />
                     </div>
                     <div class="row">
                         <div class="col-lg-6 m-0 p-0">
@@ -38,7 +68,10 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
-                                <ChartRenderer/>
+                                <ChartRenderer 
+                                    title="'chart of top products'"
+                                    type="'doughnut'"
+                                />
                             </div>
                         </div>
                         <div class="col-lg-6 m-0 p-0">
@@ -51,6 +84,7 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
+                                <ChartRenderer title="'chart of top Customers'" type="'pie'"/>
                             </div>
                         </div>
                     </div>
@@ -68,6 +102,7 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
+                                <ChartRenderer title="'chart of Monthly Sales'" type="'bar'"/>
                             </div>
                         </div>
                     </div>
@@ -82,6 +117,7 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
+                                <ChartRenderer title="'chart of Partner Orders'" type="'line'"/>
                             </div>
                         </div>
                     </div>
