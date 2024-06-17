@@ -15,19 +15,19 @@
                                         <select 
                                             class="form-select" 
                                             t-model="state.period"
-                                            t-on-change="onchagePeriod"
+                                            t-on-change="onChangePeriod"
                                         >   
-                                            <option value="all">All Quotations</option>
+                                            <option value="0">All Quotations</option>
                                             <optgroup label="Per days">
-                                                <option value="today">Today</option>
-                                                <option value="sevenDays">Last 7 days</option>
+                                                <option value="7">Last 7 days</option>
+                                                <option value="14">2 weeks before</option>
                                             </optgroup>
                                             <optgroup label="Per months">
-                                                <option value="thisMonth">This month</option>
-                                                <option value="threeMonth">3 months (last 90 days)</option>
+                                                <option value="30">Last 30 days</option>
+                                                <option value="90">last 90 days</option>
                                             </optgroup>
                                             <optgroup label="Per year">
-                                                <option value="thisYear">This year</option>
+                                                <option value="365">last 365 days</option>
                                             </optgroup>
                                         </select>
                                     </div>
@@ -43,13 +43,13 @@
                         />
                         <KpiCard 
                             name="'Orders'" 
-                            value="20" 
-                            percentage="11"
+                            value="state.orders.value"  
+                            percentage="state.orders.percentage"
                         />
                         <KpiCard 
                             name="'Revenues'" 
-                            value="-3" 
-                            percentage="-3"
+                            value="state.orders.revenue" 
+                            percentage="state.orders.revenuePercentage"
                         />
                         <KpiCard 
                             name="'Average Order'" 
