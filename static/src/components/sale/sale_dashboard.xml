@@ -40,21 +40,24 @@
                             name="'Quotations'" 
                             value="state.quotations.value" 
                             percentage="state.quotations.percentage"
+                            onClick.bind="viewQuotations"
                         />
                         <KpiCard 
                             name="'Orders'" 
                             value="state.orders.value"  
                             percentage="state.orders.percentage"
+                            onClick.bind="viewOrders"
                         />
                         <KpiCard 
                             name="'Revenues'" 
-                            value="state.orders.revenue" 
-                            percentage="state.orders.revenuePercentage"
+                            value="state.revenue.value" 
+                            percentage="state.revenue.percentage"
+                            onClick.bind="viewRevenues"
                         />
                         <KpiCard 
-                            name="'Average Order'" 
-                            value="10"
-                            percentage="6"
+                            name="'Average Orders'" 
+                            value="state.average.value"
+                            percentage="state.average.percentage"
                         />
                     </div>
                     <div class="row">
