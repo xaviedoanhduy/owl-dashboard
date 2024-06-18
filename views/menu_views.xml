@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="owl_sale_dashboard_root_menu"
+        name="Owl Dashboard"
+    >
+
+        <menuitem 
+            id="sale_menu_group_parent" 
+            name="Sale"
+        >
+            <menuitem 
+                id="sale_dashboard_menu_group" 
+                name="Dashboard"
+            >
+                <menuitem 
+                    id="sale_dashboard_custom_menu" 
+                    sequence="1" 
+                    action="owl_sale_dashboard_action"
+                    name="Custom"
+                />
+                <menuitem 
+                    id="sale_dashboard_native_menu" 
+                    sequence="2" 
+                    action="spreadsheet_dashboard.ir_actions_dashboard_action"
+                    name="Native"
+                />
+            </menuitem>
+
+            <menuitem 
+                id="sale_details_menu_group" 
+                name="Details"
+            >   
+                <menuitem
+                    id="sale_quotation_native_menu"
+                    name="My Quotations"
+                    sequence="1"
+                    action="owl_dashboard.action_quotations"
+                />
+                <menuitem
+                    id="sale_order_native_menu"
+                    name="My Orders"
+                    sequence="2"
+                    action="owl_dashboard.action_orders"
+                />
+                <menuitem
+                    id="revenues_custom_menu"
+                    name="Revenues"
+                    sequence="3"
+                    action="owl_dashboard.action_revenues"
+                />
+            </menuitem>
+        </menuitem>
+        
+        <menuitem 
+            id="crm_menu_group_parent" 
+            name="CRM"
+        >
+            <menuitem
+                id="lead_native_menu"
+                name="My Leads"
+                sequence="1"
+                action="owl_dashboard.crm_lead_action_pipeline"
+            />
+        </menuitem>
+        
+    </menuitem>
+
+</odoo>

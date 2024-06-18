@@ -2,7 +2,11 @@
 <template>
     <t t-name="owl_dashboard.KpiCardTemplate" owl="1">
         <div class="col-lg-3 m-0 p-0">
-            <div class="shadow-sm border m-2 p-4 bg-white rounded text-center">
+            <div 
+                class="shadow-sm border m-2 p-4 bg-white rounded text-center cursor-pointer"
+                t-on-click="() => props.onClick()"
+                t-attf-title="Open #{ props.name }"
+            >
                 <div class="h1 fw-bold text-dark"><span t-esc="props.value"/> </div>
                 <div class="h3 text-muted"><span t-esc="props.name"/></div>
                 <div class="h3 mt-4">
