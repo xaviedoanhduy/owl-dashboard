@@ -58,6 +58,7 @@
                             name="'Average Orders'" 
                             value="state.average.value"
                             percentage="state.average.percentage"
+                            onClick.bind="viewAverage"
                         />
                     </div>
                     <div class="row">
@@ -74,6 +75,7 @@
                                 <ChartRenderer 
                                     title="'chart of top products'"
                                     type="'doughnut'"
+                                    config="state.topProducts"
                                 />
                             </div>
                         </div>
@@ -81,13 +83,17 @@
                             <div class="shadow-sm border m-2 p-4 bg-white rounded">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h3 class="text-primary fw-bold">
-                                        Top Customers
+                                        Top Salespeople
                                     </h3>
                                     <div class="px-3 py-1 bg-primary cursor-pointer">
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
-                                <ChartRenderer title="'chart of top Customers'" type="'pie'"/>
+                                <ChartRenderer 
+                                    title="'chart of top Customers'" 
+                                    type="'pie'"
+                                    config="state.topSalespeople"
+                                />
                             </div>
                         </div>
                     </div>
@@ -105,7 +111,11 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
-                                <ChartRenderer title="'chart of Monthly Sales'" type="'bar'"/>
+                                <ChartRenderer 
+                                    title="'chart of Monthly Sales'" 
+                                    type="'bar'"
+                                    config="state.monthlySales"
+                                />
                             </div>
                         </div>
                     </div>
@@ -120,7 +130,11 @@
                                         <span class="fa fa-arrow-right text-right"/>
                                     </div>
                                 </div>
-                                <ChartRenderer title="'chart of Partner Orders'" type="'line'"/>
+                                <ChartRenderer 
+                                    title="'chart of Partner Orders'" 
+                                    type="'bar'"
+                                    config="state.partnersOrders"
+                                />
                             </div>
                         </div>
                     </div>

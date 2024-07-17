@@ -5,10 +5,172 @@ import { KpiCard } from "./kpi_card/kpi_card";
 import { ChartRenderer } from "./chart_renderer/chart_renderer";
 import { useService } from "@web/core/utils/hooks";
 import { formatMonetary } from "@web/views/fields/formatters";
+import { getColor } from "@web/core/colors/colors";
 const { Component, onWillStart, useRef, onMounted, useState } = owl;
 const { DateTime } = luxon;
 
+
 export class OwlSaleDashboard extends Component {
+
+    // Top products
+    async getTopProducts() {
+        const domain = [["state", "not in", ["draft", "cancel", "sent"]]];
+        if (this.state.period > 0) 
+            domain.push(["date", ">", this.state.currentDate]);
+
+        const data = await this.orm.readGroup(
+            "sale.report", 
+            domain, 
+            ["product_id", "price_total"], 
+            ["product_id"],
+            {limit: 5, orderby: "price_total DESC"}
+        )
+        this.state.topProducts = {
+            data: {
+                labels: data.map(p => p.product_id[1]),
+                datasets: [
+                    {
+                        label: "Total",
+                        data: data.map(p => p.price_total),
+                        hoverOffset: 4,
+                        backgroundColor: data.map(
+                            (_, i) => getColor(i)
+                        ),
+                    },
+                    {
+                        label: "Count",
+                        data: data.map(p => p.product_id_count),
+                        hoverOffset: 4,
+                        backgroundColor: data.map(
+                            (_, i) => getColor(i)
+                        ),
+                    },
+                ],
+            },
+            domain: domain,
+            label_field: "product_id",
+        }
+    }
+
+    // Top Salespeople
+    async getTopSalespeople() {
+        const domain = [["state", "not in", ["draft", "cancel", "sent"]]];
+        if (this.state.period > 0) 
+            domain.push(["date", ">", this.state.currentDate]);
+
+        const data = await this.orm.readGroup(
+            "sale.report", 
+            domain, 
+            ["user_id", "price_total"], 
+            ["user_id"],
+            {limit: 5, orderby: "price_total DESC"}
+        )
+        this.state.topSalespeople = {
+            data: {
+                labels: data.map(p => p.user_id[1]),
+                datasets: [
+                    {
+                        label: "Total",
+                        data: data.map(p => p.price_total),
+                        hoverOffset: 4,
+                        backgroundColor: data.map(
+                            (_, i) => getColor(i)
+                        ),
+                    },
+                ],
+            },
+            domain: domain,
+            label_field: "user_id",
+        };
+    }
+
+    // Monthly sales
+    async getMonthlySales() {
+        const domain = [["state", "not in", ["cancel"]]];
+        if (this.state.period > 0) 
+            domain.push(["date", ">", this.state.currentDate]);
+
+        const data = await this.orm.readGroup(
+            "sale.report", 
+            domain, 
+            ["product_id", "price_total", "date"], 
+            ["date", "state"],
+            {orderby: "date ASC", lazy: false}
+        )
+        this.state.monthlySales = {
+            data: {
+                labels: [... new Set(data.map(p => p.date))],
+                datasets: [
+                    {
+                        label: "Quotations",
+                        data: data.filter(
+                            d => d.state === "draft" || d.state === "sent"
+                        ).map(p => p.price_total),
+                        hoverOffset: 4,
+                        backgroundColor: "lightGreen",
+                    },
+                    {
+                        label: "Orders",
+                        data: data.filter(
+                            d => ["sale", "done"].includes(d.state)
+                        ).map(p => p.price_total),
+                        hoverOffset: 4,
+                        backgroundColor: "green",
+                    },
+                ],
+            },
+            domain: domain,
+            label_field: "date",
+        };
+    }
+
+    // Partners Orders
+   async getPartnersOrders() {
+    const domain = [["state", "not in", ["draft", "cancel", "sent"]]];
+        if (this.state.period > 0) 
+            domain.push(["date", ">", this.state.currentDate]);
+
+        const data = await this.orm.readGroup(
+            "sale.report", 
+            domain, 
+            ["partner_id", "price_total", "product_uom_qty"], 
+            ["partner_id"],
+            {orderby: "price_total DESC", lazy: false}
+        )
+        this.state.partnersOrders = {
+            data: {
+                labels: data.map(p => p.partner_id[1]),
+                datasets: [
+                    {
+                        label: "Total Amount",
+                        data: data.map(p => p.price_total),
+                        hoverOffset: 4,
+                        backgroundColor: "orange",
+                        yAxisID: "total",
+                        order: 1,
+                    },
+                    {
+                        label: "Ordered Quantities",
+                        data: data.map(p => p.product_uom_qty),
+                        hoverOffset: 4,
+                        backgroundColor: "rgb(75, 192, 192)",
+                        type: "line",
+                        borderColor: "rgb(75, 192, 192)",
+                        yAxisID: "Quantity",
+                        order: 0,
+                    },
+                ],
+            },
+            scales: {
+                Quantity: {
+                    position: "right",
+                }
+            },
+            domain: domain,
+            label_field: "partner_id",
+        };
+    }
+
     setup() {
         this.resModel = "sale.order";
 
@@ -22,6 +184,10 @@ export class OwlSaleDashboard extends Component {
 
         onWillStart(async () => {
             await this.onChangePeriod();
+            await this.getTopProducts();
+            await this.getTopSalespeople();
+            await this.getMonthlySales();
+            await this.getPartnersOrders();
         });
     }
 
@@ -233,6 +399,10 @@ export class OwlSaleDashboard extends Component {
                 [pivotView.length > 0 ? pivotView[0].res_id : false, "pivot"],
             ]
         });
+    }
+
+    async viewAverage() {
+        this.actionService.doAction("spreadsheet_dashboard.ir_actions_dashboard_action", {})
     }
 
 }
