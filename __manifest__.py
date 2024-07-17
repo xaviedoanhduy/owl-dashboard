@@ -30,7 +30,7 @@
         "web.assets_backend": [
             "owl_dashboard/static/src/components/**/*.js",
             "owl_dashboard/static/src/components/**/*.xml",
-            "owl_dashboard/static/src/components/**/*.scss",
+            # "owl_dashboard/static/src/components/**/*.scss",
         ]
     }
 }
